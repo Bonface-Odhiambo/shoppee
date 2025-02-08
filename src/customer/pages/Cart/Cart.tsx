@@ -84,7 +84,7 @@ const Cart = () => {
                     <LocalOfferIcon
                       sx={{ color: teal[600], fontSize: "17px" }}
                     />
-                    <span>Apply Coupens</span>
+                    <span>Apply Coupons</span>
                   </div>
                 </div>
                 {!cart.cart?.couponCode ? (
@@ -101,7 +101,7 @@ const Cart = () => {
                       disabled={couponCode ? false : true}
                       size="small"
                     >
-                      Aplly
+                      Apply
                     </Button>
                   </div>
                 ) : (
@@ -134,7 +134,7 @@ const Cart = () => {
               </section>
 
               <div className="border rounded-md px-5 py-4 flex justify-between items-center cursor-pointer">
-                <span>Add From Whishlist</span>
+                <span>Add From Wishlist</span>
                 <FavoriteIcon sx={{ color: teal[600], fontSize: "21px" }} />
               </div>
             </div>
@@ -143,7 +143,7 @@ const Cart = () => {
       ) : (
         <div className="h-[85vh] flex justify-center items-center flex-col">
           <div className="text-center py-5">
-            <h1 className="text-lg font-medium">hay its feels so light!</h1>
+            <h1 className="text-lg font-medium">hey it feels so light!</h1>
             <p className="text-gray-500 text-sm">
               there is nothing in your bag, lets add some items
             </p>

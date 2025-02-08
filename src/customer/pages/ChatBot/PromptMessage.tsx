@@ -10,4 +10,4 @@ const PromptMessage = ({message,index}:PromptMessageProps) => {
   )
 }
 
-export default PromptMessage
+export default PromptMessage;

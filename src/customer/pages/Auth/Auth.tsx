@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import LoginForm from './LoginForm'
 import { Alert, Button, Snackbar } from '@mui/material';
 import SignupForm from './SignupForm';

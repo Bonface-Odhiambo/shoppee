@@ -131,8 +131,8 @@ const Profile = () => {
           />
           <Divider />
           <ProfileFildCard
-            keys={"GSTIN"}
-            value={sellers.profile?.gstin || "not provided"}
+            keys={"KRAPIN"}
+            value={sellers.profile?.krapin || "not provided"}
           />
           <Divider />
           <ProfileFildCard
@@ -210,8 +210,8 @@ const Profile = () => {
             />
             <Divider />
             <ProfileFildCard
-              keys={"IFSC CODE"}
-              value={sellers.profile?.bankDetails?.ifscCode}
+              keys={"SWIFT CODE"}
+              value={sellers.profile?.bankDetails?.swiftCode}
             />
           </div>
         </div>

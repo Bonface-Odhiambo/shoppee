@@ -8,7 +8,7 @@ const SellerAccountVerified = () => {
         <div className='h-[80vh] flex flex-col justify-center items-center space-y-3'>
 
             <Alert variant="filled" severity="success">
-                Your Email Get Verified Successfully
+                Your Email Got Verified Successfully
             </Alert>
             <div>
                 <Button variant='contained' onClick={() => navigate("/become-seller")}>

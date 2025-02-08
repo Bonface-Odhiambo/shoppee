@@ -64,7 +64,7 @@ const ChatBot = ({handleClose,productId}:ChatBotProps) => {
                 <div className="h-[78%] p-5 flex flex-col py-5 px-5 overflow-y-auto  custom-scrollbar">
 
                     <p>Welcome to Venda Shop AI Assistant, you can
-                      {productId?` Query About this Product : ${productId}`:"   query about your cart, and order history here"}
+                      {productId?` Query About this Product : ${productId}`:"   ask us what is in stock"}
                     </p>
                     { aiChatBot.messages.map((item:any, index:number) =>
                         item.role == "user" ? (

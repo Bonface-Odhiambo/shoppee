@@ -34,7 +34,7 @@ const SellerAccountForm = () => {
     initialValues: {
       mobile: "",
       otp: "",
-      gstin: "",
+      krapin: "",
       pickupAddress: {
         name: "",
         mobile: "",
@@ -46,7 +46,7 @@ const SellerAccountForm = () => {
       },
       bankDetails: {
         accountNumber: "",
-        ifscCode: "",
+        swiftCode: "",
         accountHolderName: "",
       },
       sellerName: "",

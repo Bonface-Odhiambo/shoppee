@@ -19,7 +19,6 @@ import "tailwindcss/tailwind.css";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import CloseIcon from "@mui/icons-material/Close";
 import { mainCategory } from "../../../data/category/mainCategory";
-import { isTemplateMiddle } from "typescript";
 import { menLevelTwo } from "../../../data/category/level two/menLevelTwo";
 import { womenLevelTwo } from "../../../data/category/level two/womenLevelTwo";
 import { menLevelThree } from "../../../data/category/level three/menLevelThree";
@@ -58,28 +57,28 @@ const validationSchema = Yup.object({
   description: Yup.string()
     .min(10, "Description should be at least 10 characters long")
     .required("Description is required"),
-  price: Yup.number()
-    .positive("Price should be greater than zero")
-    .required("Price is required"),
-  discountedPrice: Yup.number()
-    .positive("Discounted Price should be greater than zero")
-    .required("Discounted Price is required"),
-  discountPercent: Yup.number()
-    .positive("Discount Percent should be greater than zero")
-    .required("Discount Percent is required"),
+  mrpPrice: Yup.number()
+    .positive("MRP Price should be greater than zero")
+    .required("MRP Price is required"),
+  sellingPrice: Yup.number()
+    .positive("Selling Price should be greater than zero")
+    .min(5000, "Minimum order amount must be Ksh 5000 or above")
+    .required("Selling Price is required"),
   quantity: Yup.number()
     .positive("Quantity should be greater than zero")
     .required("Quantity is required"),
-  color: Yup.string().required("Color is required"),
-  category: Yup.string().required("Category is required"),
-  sizes: Yup.string().required("Sizes are required"),
-})
+  color: Yup.string()
+    .required("Color is required"),
+  category: Yup.string()
+    .required("Category is required"),
+  sizes: Yup.string()
+    .required("Sizes are required"),
+});
 
 const ProductForm = () => {
   const [uploadImage, setUploadingImage] = useState(false);
   const dispatch = useAppDispatch();
   const { sellers, sellerProduct } = useAppSelector(store => store);
-
   const [snackbarOpen, setOpenSnackbar] = useState(false);
 
   const formik = useFormik({
@@ -96,7 +95,7 @@ const ProductForm = () => {
       category3: "",
       sizes: "",
     },
-    // validationSchema: validationSchema,
+    validationSchema: validationSchema,
     onSubmit: (values) => {
       dispatch(createProduct({ request: values, jwt: localStorage.getItem("jwt") }))
       console.log(values);
@@ -107,7 +106,6 @@ const ProductForm = () => {
     const file = event.target.files[0];
     setUploadingImage(true);
     const image = await uploadToCloudinary(file);
-    // const image = URL.createObjectURL(file);
     formik.setFieldValue("images", [...formik.values.images, image]);
     setUploadingImage(false);
   };
@@ -119,10 +117,7 @@ const ProductForm = () => {
   };
 
   const childCategory = (category: any, parentCategoryId: any) => {
-    return category.filter((child: any) => {
-      // console.log("Category", parentCategoryId, child)
-      return child.parentCategoryId == parentCategoryId;
-    });
+    return category.filter((child: any) => child.parentCategoryId == parentCategoryId);
   };
 
   const handleCloseSnackbar = () => {
@@ -133,7 +128,7 @@ const ProductForm = () => {
     if (sellerProduct.productCreated || sellerProduct.error) {
       setOpenSnackbar(true)
     }
-  }, [sellerProduct.productCreated,sellerProduct.error])
+  }, [sellerProduct.productCreated, sellerProduct.error])
 
   return (
     <div>
@@ -147,7 +142,6 @@ const ProductForm = () => {
               style={{ display: "none" }}
               onChange={handleImageChange}
             />
-
             <label className="relative" htmlFor="fileInput">
               <span className="w-24 h-24 cursor-pointer flex items-center justify-center p-3 border rounded-md border-gray-400">
                 <AddPhotoAlternateIcon className="text-gray-700" />
@@ -158,19 +152,16 @@ const ProductForm = () => {
                 </div>
               )}
             </label>
-
             <div className="flex flex-wrap gap-2">
               {formik.values.images.map((image, index) => (
-                <div className="relative">
+                <div className="relative" key={index}>
                   <img
                     className="w-24 h-24 object-cover"
-                    key={index}
                     src={image}
                     alt={`ProductImage ${index + 1}`}
                   />
                   <IconButton
                     onClick={() => handleRemoveImage(index)}
-                    className=""
                     size="small"
                     color="error"
                     sx={{
@@ -186,7 +177,8 @@ const ProductForm = () => {
               ))}
             </div>
           </Grid>
-          <Grid item xs={12} sm={12}>
+
+          <Grid item xs={12}>
             <TextField
               fullWidth
               id="title"
@@ -199,7 +191,8 @@ const ProductForm = () => {
               required
             />
           </Grid>
-          <Grid item xs={12} sm={12}>
+
+          <Grid item xs={12}>
             <TextField
               multiline
               rows={4}
@@ -209,19 +202,18 @@ const ProductForm = () => {
               label="Description"
               value={formik.values.description}
               onChange={formik.handleChange}
-              error={
-                formik.touched.description && Boolean(formik.errors.description)
-              }
+              error={formik.touched.description && Boolean(formik.errors.description)}
               helperText={formik.touched.description && formik.errors.description}
               required
             />
           </Grid>
+
           <Grid item xs={12} sm={6} lg={3}>
             <TextField
               fullWidth
-              id="mrp_price"
+              id="mrpPrice"
               name="mrpPrice"
-              label="MRP Price"
+              label="MRP Price (Ksh)"
               type="number"
               value={formik.values.mrpPrice}
               onChange={formik.handleChange}
@@ -230,22 +222,39 @@ const ProductForm = () => {
               required
             />
           </Grid>
+
           <Grid item xs={12} sm={6} lg={3}>
             <TextField
               fullWidth
               id="sellingPrice"
               name="sellingPrice"
-              label="Selling Price"
+              label="Selling Price (Ksh)"
               type="number"
               value={formik.values.sellingPrice}
               onChange={formik.handleChange}
-              error={
-                formik.touched.sellingPrice &&
-                Boolean(formik.errors.sellingPrice)
-              }
+              error={formik.touched.sellingPrice && Boolean(formik.errors.sellingPrice)}
               helperText={
-                formik.touched.sellingPrice && formik.errors.sellingPrice
+                (formik.touched.sellingPrice && formik.errors.sellingPrice) ||
+                "Minimum order amount: Ksh 5000"
               }
+              required
+              InputProps={{
+                inputProps: { min: 5000 }
+              }}
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={6} lg={3}>
+            <TextField
+              fullWidth
+              id="quantity"
+              name="quantity"
+              label="Quantity"
+              type="number"
+              value={formik.values.quantity}
+              onChange={formik.handleChange}
+              error={formik.touched.quantity && Boolean(formik.errors.quantity)}
+              helperText={formik.touched.quantity && formik.errors.quantity}
               required
             />
           </Grid>
@@ -265,22 +274,25 @@ const ProductForm = () => {
                 onChange={formik.handleChange}
                 label="Color"
               >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
-
-                {colors.map((color, index) => <MenuItem value={color.name}>
-                  <div className="flex gap-3">
-                    <span style={{ backgroundColor: color.hex }} className={`h-5 w-5 rounded-full ${color.name === "White" ? "border" : ""}`}></span>
-                    <p>{color.name}</p>
-                  </div>
-                </MenuItem>)}
+                <MenuItem value=""><em>None</em></MenuItem>
+                {colors.map((color, index) => (
+                  <MenuItem value={color.name} key={index}>
+                    <div className="flex gap-3">
+                      <span 
+                        style={{ backgroundColor: color.hex }} 
+                        className={`h-5 w-5 rounded-full ${color.name === "White" ? "border" : ""}`}
+                      />
+                      <p>{color.name}</p>
+                    </div>
+                  </MenuItem>
+                ))}
               </Select>
               {formik.touched.color && formik.errors.color && (
                 <FormHelperText>{formik.errors.color}</FormHelperText>
               )}
             </FormControl>
           </Grid>
+
           <Grid item xs={12} sm={6} lg={3}>
             <FormControl
               fullWidth
@@ -296,9 +308,7 @@ const ProductForm = () => {
                 onChange={formik.handleChange}
                 label="Sizes"
               >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
+                <MenuItem value=""><em>None</em></MenuItem>
                 <MenuItem value="FREE">FREE</MenuItem>
                 <MenuItem value="S">S</MenuItem>
                 <MenuItem value="M">M</MenuItem>
@@ -310,6 +320,7 @@ const ProductForm = () => {
               )}
             </FormControl>
           </Grid>
+
           <Grid item xs={12} sm={6} lg={4}>
             <FormControl
               fullWidth
@@ -325,9 +336,8 @@ const ProductForm = () => {
                 onChange={formik.handleChange}
                 label="Category"
               >
-                {/* <MenuItem value=""><em>None</em></MenuItem> */}
                 {mainCategory.map((item) => (
-                  <MenuItem value={item.categoryId}>{item.name}</MenuItem>
+                  <MenuItem value={item.categoryId} key={item.categoryId}>{item.name}</MenuItem>
                 ))}
               </Select>
               {formik.touched.category && formik.errors.category && (
@@ -339,7 +349,7 @@ const ProductForm = () => {
           <Grid item xs={12} sm={6} lg={4}>
             <FormControl
               fullWidth
-              error={formik.touched.category && Boolean(formik.errors.category)}
+              error={formik.touched.category2 && Boolean(formik.errors.category2)}
               required
             >
               <InputLabel id="category2-label">Second Category</InputLabel>
@@ -353,45 +363,45 @@ const ProductForm = () => {
               >
                 {formik.values.category &&
                   categoryTwo[formik.values.category]?.map((item) => (
-                    <MenuItem value={item.categoryId}>{item.name}</MenuItem>
+                    <MenuItem value={item.categoryId} key={item.categoryId}>{item.name}</MenuItem>
                   ))}
               </Select>
-              {formik.touched.category && formik.errors.category && (
-                <FormHelperText>{formik.errors.category}</FormHelperText>
+              {formik.touched.category2 && formik.errors.category2 && (
+                <FormHelperText>{formik.errors.category2}</FormHelperText>
               )}
             </FormControl>
           </Grid>
+
           <Grid item xs={12} sm={6} lg={4}>
             <FormControl
               fullWidth
-              error={formik.touched.category && Boolean(formik.errors.category)}
+              error={formik.touched.category3 && Boolean(formik.errors.category3)}
               required
             >
-              <InputLabel id="category-label">Third Category</InputLabel>
+              <InputLabel id="category3-label">Third Category</InputLabel>
               <Select
-                labelId="category-label"
-                id="category"
+                labelId="category3-label"
+                id="category3"
                 name="category3"
                 value={formik.values.category3}
                 onChange={formik.handleChange}
                 label="Third Category"
               >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
+                <MenuItem value=""><em>None</em></MenuItem>
                 {formik.values.category2 &&
                   childCategory(
                     categoryThree[formik.values.category],
                     formik.values.category2
                   )?.map((item: any) => (
-                    <MenuItem value={item.categoryId}>{item.name}</MenuItem>
+                    <MenuItem value={item.categoryId} key={item.categoryId}>{item.name}</MenuItem>
                   ))}
               </Select>
-              {formik.touched.category && formik.errors.category && (
-                <FormHelperText>{formik.errors.category}</FormHelperText>
+              {formik.touched.category3 && formik.errors.category3 && (
+                <FormHelperText>{formik.errors.category3}</FormHelperText>
               )}
             </FormControl>
           </Grid>
+
           <Grid item xs={12}>
             <Button
               sx={{ p: "14px" }}
@@ -401,15 +411,18 @@ const ProductForm = () => {
               type="submit"
               disabled={sellerProduct.loading}
             >
-              {sellerProduct.loading ? <CircularProgress size="small"
-                sx={{ width: "27px", height: "27px" }} /> : "Add Product"}
+              {sellerProduct.loading ? 
+                <CircularProgress size="small" sx={{ width: "27px", height: "27px" }} /> : 
+                "Add Product"
+              }
             </Button>
           </Grid>
         </Grid>
       </form>
       <Snackbar
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
-        open={snackbarOpen} autoHideDuration={6000}
+        open={snackbarOpen}
+        autoHideDuration={6000}
         onClose={handleCloseSnackbar}
       >
         <Alert
@@ -422,7 +435,6 @@ const ProductForm = () => {
         </Alert>
       </Snackbar>
     </div>
-
   );
 };
 

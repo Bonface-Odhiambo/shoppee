@@ -14,12 +14,12 @@ const BusinessDetailsForm = ({ onClose }: UpdateDetailsFormProps) => {
   const formik = useFormik({
     initialValues: {
       businessName: "",
-      gstin: "",
+      krapin: "",
       accountStatus: "",
     },
     validationSchema: Yup.object({
       businessName: Yup.string().required("Business Name is required"),
-      gstin: Yup.string().required("GSTIN is required"),
+      krapin: Yup.string().required("KRAPIN is required"),
       accountStatus: Yup.string().required("Account Status is required"),
     }),
     onSubmit: (values) => {
@@ -38,7 +38,7 @@ const BusinessDetailsForm = ({ onClose }: UpdateDetailsFormProps) => {
     if (sellers.profile) {
       formik.setValues({
         businessName: sellers.profile?.businessDetails?.businessName,
-        gstin: sellers.profile?.gstin,
+        krapin: sellers.profile?.krapin,
         accountStatus: sellers.profile?.accountStatus ?? "",
       });
     }
@@ -64,13 +64,13 @@ const BusinessDetailsForm = ({ onClose }: UpdateDetailsFormProps) => {
         />
         <TextField
           fullWidth
-          id="gstin"
-          name="gstin"
-          label="GSTIN"
-          value={formik.values.gstin}
+          id="krapin"
+          name="krapin"
+          label="KRAPIN"
+          value={formik.values.krapin}
           onChange={formik.handleChange}
-          error={formik.touched.gstin && Boolean(formik.errors.gstin)}
-          helperText={formik.touched.gstin && formik.errors.gstin}
+          error={formik.touched.krapin && Boolean(formik.errors.krapin)}
+          helperText={formik.touched.krapin && formik.errors.krapin}
         />
         <TextField
           fullWidth

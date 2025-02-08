@@ -12,7 +12,7 @@ export interface PickupAddress {
 
 export interface BankDetails {
     accountNumber: string;
-    ifscCode: string;
+    swiftCode: string;
     accountHolderName: string;
 }
 
@@ -24,7 +24,7 @@ export interface Seller {
     id?:number;
     mobile: string;
     otp: string;
-    gstin: string;
+    krapin: string;
     pickupAddress: PickupAddress;
     bankDetails: BankDetails;
     sellerName: string;

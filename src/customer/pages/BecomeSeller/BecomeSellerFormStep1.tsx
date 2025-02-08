@@ -53,13 +53,13 @@ const BecomeSellerFormStep1 = ({ formik, handleOtpChange }: any) => {
 
                 <TextField
                     fullWidth
-                    name="GSTIN"
-                    label="GSTIN Number"
-                    value={formik.values.GSTIN}
+                    name="KRAPIN"
+                    label="KRAPIN Number"
+                    value={formik.values.KRAPIN}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    error={formik.touched.GSTIN && Boolean(formik.errors.GSTIN)}
-                    helperText={formik.touched.GSTIN && formik.errors.GSTIN}
+                    error={formik.touched.KRAPIN && Boolean(formik.errors.KRAPIN)}
+                    helperText={formik.touched.KRAPIN && formik.errors.KRAPIN}
                 />
             </div>
 
